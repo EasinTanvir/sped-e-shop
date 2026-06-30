@@ -13,7 +13,6 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Cockroach Killer Combo",
-  description: "তেলাপোকা নির্মূলের কার্যকরী স্প্রে অর্ডার পেজ",
 };
 
 export default function RootLayout({ children }) {
