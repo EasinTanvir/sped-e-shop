@@ -13,9 +13,9 @@ export default async function ProductsPage() {
       <section className="bg-white px-5 py-10">
         <div className="mx-auto max-w-7xl">
           <p className="text-sm font-black uppercase tracking-wide text-red-600">Product showcase</p>
-          <h1 className="mt-2 text-4xl font-black">Shop pest control products</h1>
+          <h1 className="mt-2 text-4xl font-black">Shop pest-control essentials</h1>
           <p className="mt-3 max-w-2xl text-zinc-600">
-            Browse available products and place a Cash on Delivery order from the product page.
+            Browse available products. You will be asked to sign in before placing any Cash on Delivery order.
           </p>
         </div>
       </section>

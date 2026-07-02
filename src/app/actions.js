@@ -1,8 +1,11 @@
 "use server";
 
+import { mkdir, unlink, writeFile } from "fs/promises";
+import crypto from "crypto";
+import path from "path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { clearSession, requireAdmin, setSession } from "@/lib/auth";
+import { clearSession, requireAdmin, requireCustomer, setSession } from "@/lib/auth";
 import { getProductBySlug } from "@/lib/data";
 import { sendOrderStatusEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
@@ -17,33 +20,45 @@ function parseIntField(formData, key, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-async function findOrCreateCustomer({ name, email, phone, address }) {
-  if (!email) return null;
+const UPLOAD_DIR = path.join(process.cwd(), "uploads");
+const LOCAL_UPLOAD_PREFIX = "/api/uploads/";
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return prisma.user.update({
-      where: { id: existing.id },
-      data: {
-        name: existing.name || name,
-        phone: existing.phone || phone,
-        address: existing.address || address,
-      },
-    });
-  }
-
-  return prisma.user.create({
-    data: {
-      name,
-      email,
-      phone,
-      address,
-      role: "CUSTOMER",
-    },
-  });
+function isLocalUpload(imageUrl) {
+  return imageUrl?.startsWith(LOCAL_UPLOAD_PREFIX);
 }
 
-export async function createOrderAction(_state, formData) {
+async function deleteLocalUpload(imageUrl) {
+  if (!isLocalUpload(imageUrl)) return;
+
+  const filename = path.basename(imageUrl);
+  await unlink(path.join(UPLOAD_DIR, filename)).catch(() => {});
+}
+
+async function saveProductImage(file) {
+  if (!file || typeof file === "string" || file.size === 0) return null;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Only JPG, PNG, WEBP, or GIF images are allowed.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("Product image must be 5MB or smaller.");
+  }
+
+  await mkdir(UPLOAD_DIR, { recursive: true });
+
+  const extension = path.extname(file.name || "").toLowerCase() || ".jpg";
+  const filename = `${Date.now()}-${crypto.randomUUID()}${extension}`;
+  const bytes = Buffer.from(await file.arrayBuffer());
+
+  await writeFile(path.join(UPLOAD_DIR, filename), bytes);
+
+  return `${LOCAL_UPLOAD_PREFIX}${filename}`;
+}
+
+export async function createOrderAction(formData) {
+  const user = await requireCustomer();
   const productSlug = value(formData, "productSlug");
   const product = await getProductBySlug(productSlug);
 
@@ -52,19 +67,23 @@ export async function createOrderAction(_state, formData) {
   }
 
   const quantity = Math.max(1, parseIntField(formData, "quantity", 1));
-  const name = value(formData, "name");
-  const email = value(formData, "email").toLowerCase();
-  const phone = value(formData, "phone");
+  const name = user.name;
+  const email = user.email;
+  const phone = value(formData, "phone") || user.phone;
   const address = value(formData, "address");
   const notes = value(formData, "notes");
 
-  if (!name || !email || !phone || !address) {
-    return { ok: false, message: "Name, email, phone, and address are required." };
+  if (!phone || !address) {
+    return { ok: false, message: "Phone and delivery address are required." };
   }
 
-  const customer = await findOrCreateCustomer({ name, email, phone, address });
   const total = product.price * quantity;
   const orderNumber = `COD-${Date.now().toString(36).toUpperCase()}`;
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { phone, address },
+  });
 
   await prisma.order.create({
     data: {
@@ -74,7 +93,7 @@ export async function createOrderAction(_state, formData) {
       customerPhone: phone,
       deliveryAddress: address,
       productId: product.id,
-      customerId: customer?.id,
+      customerId: user.id,
       quantity,
       unitPrice: product.price,
       total,
@@ -86,6 +105,7 @@ export async function createOrderAction(_state, formData) {
   revalidatePath("/");
   revalidatePath("/products");
   revalidatePath("/customer");
+  revalidatePath("/customer/orders");
 
   return {
     ok: true,
@@ -93,7 +113,7 @@ export async function createOrderAction(_state, formData) {
   };
 }
 
-export async function loginAction(_state, formData) {
+export async function loginAction(formData) {
   const email = value(formData, "email").toLowerCase();
   const password = value(formData, "password");
   const next = value(formData, "next") || "/customer";
@@ -107,7 +127,7 @@ export async function loginAction(_state, formData) {
   redirect(user.role === "ADMIN" ? "/dashboard" : next);
 }
 
-export async function registerAction(_state, formData) {
+export async function registerAction(formData) {
   const name = value(formData, "name");
   const email = value(formData, "email").toLowerCase();
   const phone = value(formData, "phone");
@@ -149,16 +169,36 @@ export async function upsertProductAction(formData) {
   const slug = slugify(value(formData, "slug") || name);
   const description = value(formData, "description");
   const imageUrl = value(formData, "imageUrl");
+  const imageFile = formData.get("image");
   const price = parseIntField(formData, "price");
   const compareAtPrice = parseIntField(formData, "compareAtPrice");
   const stock = parseIntField(formData, "stock");
   const isActive = formData.get("isActive") === "on";
 
+  if (!name || !slug || !description || !price) {
+    return { ok: false, message: "Name, slug, description, and price are required." };
+  }
+
+  let uploadedImageUrl = null;
+  try {
+    uploadedImageUrl = await saveProductImage(imageFile);
+  } catch (error) {
+    return { ok: false, message: error.message };
+  }
+
+  const existing = id ? await prisma.product.findUnique({ where: { id } }) : null;
+
+  const finalImageUrl = uploadedImageUrl || imageUrl;
+
+  if (!finalImageUrl) {
+    return { ok: false, message: "Upload an image or provide an image URL." };
+  }
+
   const data = {
     name,
     slug,
     description,
-    imageUrl,
+    imageUrl: finalImageUrl,
     price,
     compareAtPrice: compareAtPrice || null,
     stock,
@@ -167,24 +207,39 @@ export async function upsertProductAction(formData) {
 
   if (id) {
     await prisma.product.update({ where: { id }, data });
+    if (existing?.imageUrl !== finalImageUrl) {
+      await deleteLocalUpload(existing?.imageUrl);
+    }
   } else {
     await prisma.product.create({ data });
   }
 
   revalidatePath("/");
   revalidatePath("/products");
+  revalidatePath(`/products/${slug}`);
+  if (existing?.slug && existing.slug !== slug) revalidatePath(`/products/${existing.slug}`);
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/products");
+
+  return { ok: true, message: id ? "Product updated." : "Product created." };
 }
 
 export async function deleteProductAction(formData) {
   await requireAdmin();
 
   const id = value(formData, "id");
-  if (id) await prisma.product.delete({ where: { id } });
+  if (id) {
+    const product = await prisma.product.findUnique({ where: { id } });
+    await prisma.product.delete({ where: { id } });
+    await deleteLocalUpload(product?.imageUrl);
+  }
 
   revalidatePath("/");
   revalidatePath("/products");
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/products");
+
+  return { ok: true, message: "Product deleted." };
 }
 
 export async function updateOrderStatusAction(formData) {
@@ -202,5 +257,10 @@ export async function updateOrderStatusAction(formData) {
   await sendOrderStatusEmail(order);
 
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/orders");
+  revalidatePath(`/dashboard/orders/${id}`);
   revalidatePath("/customer");
+  revalidatePath("/customer/orders");
+
+  return { ok: true, message: `Order status updated to ${status}.` };
 }

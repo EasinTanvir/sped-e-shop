@@ -2,13 +2,14 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import OrderForm from "@/components/commerce/OrderForm";
 import SiteHeader from "@/components/commerce/SiteHeader";
+import { getSessionUser } from "@/lib/auth";
 import { formatTk, getProductBySlug } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductDetailPage({ params }) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const [product, user] = await Promise.all([getProductBySlug(slug), getSessionUser()]);
 
   if (!product) notFound();
 
@@ -32,7 +33,7 @@ export default async function ProductDetailPage({ params }) {
             </div>
             <p className="mt-3 text-sm font-bold text-zinc-500">Stock: {product.stock} units</p>
             <div className="mt-7">
-              <OrderForm product={product} />
+              <OrderForm product={product} user={user} />
             </div>
           </div>
         </div>

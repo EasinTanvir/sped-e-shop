@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import ToastProvider from "@/components/commerce/ToastProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Cockroach Killer Combo",
+  title: "Green Pest Shop",
+  description: "Cash on Delivery pest control product store",
 };
 
 export default function RootLayout({ children }) {
@@ -21,7 +23,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-950">
+        <ToastProvider />
+        {children}
+      </body>
     </html>
   );
 }
