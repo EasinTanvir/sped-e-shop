@@ -5,7 +5,12 @@ import crypto from "crypto";
 import path from "path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { clearSession, requireAdmin, requireCustomer, setSession } from "@/lib/auth";
+import {
+  clearSession,
+  requireAdmin,
+  requireCustomer,
+  setSession,
+} from "@/lib/auth";
 import { getProductBySlug } from "@/lib/data";
 import { sendOrderStatusEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
@@ -135,7 +140,10 @@ export async function registerAction(formData) {
   const password = value(formData, "password");
 
   if (!name || !email || !password || password.length < 8) {
-    return { ok: false, message: "Name, email, and an 8 character password are required." };
+    return {
+      ok: false,
+      message: "Name, email, and an 8 character password are required.",
+    };
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -176,7 +184,10 @@ export async function upsertProductAction(formData) {
   const isActive = formData.get("isActive") === "on";
 
   if (!name || !slug || !description || !price) {
-    return { ok: false, message: "Name, slug, description, and price are required." };
+    return {
+      ok: false,
+      message: "Name, slug, description, and price are required.",
+    };
   }
 
   let uploadedImageUrl = null;
@@ -186,7 +197,9 @@ export async function upsertProductAction(formData) {
     return { ok: false, message: error.message };
   }
 
-  const existing = id ? await prisma.product.findUnique({ where: { id } }) : null;
+  const existing = id
+    ? await prisma.product.findUnique({ where: { id } })
+    : null;
 
   const finalImageUrl = uploadedImageUrl || imageUrl;
 
@@ -217,7 +230,8 @@ export async function upsertProductAction(formData) {
   revalidatePath("/");
   revalidatePath("/products");
   revalidatePath(`/products/${slug}`);
-  if (existing?.slug && existing.slug !== slug) revalidatePath(`/products/${existing.slug}`);
+  if (existing?.slug && existing.slug !== slug)
+    revalidatePath(`/products/${existing.slug}`);
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/products");
 
