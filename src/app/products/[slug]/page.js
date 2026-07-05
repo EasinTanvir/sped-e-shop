@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import OrderForm from "@/components/commerce/OrderForm";
 import SiteHeader from "@/components/commerce/SiteHeader";
 import { getSessionUser } from "@/lib/auth";
-import { orderStatusLabel, formatTk } from "@/lib";
+import { formatTk } from "@/lib";
+import { getProductBySlug } from "@/lib/data";
 
 const ProductDetailPage = async ({ params }) => {
   const { slug } = await params;
