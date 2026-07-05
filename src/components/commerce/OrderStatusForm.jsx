@@ -5,14 +5,23 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { updateOrderStatusAction } from "@/app/actions";
-import { orderStatusLabel } from "@/lib/data";
+import { orderStatusLabel, formatTk } from "@/lib";
 
-const statuses = ["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
+const statuses = [
+  "PENDING",
+  "CONFIRMED",
+  "PROCESSING",
+  "SHIPPED",
+  "DELIVERED",
+  "CANCELLED",
+];
 
 export default function OrderStatusForm({ order }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { register, handleSubmit } = useForm({ defaultValues: { status: order.status } });
+  const { register, handleSubmit } = useForm({
+    defaultValues: { status: order.status },
+  });
 
   function onSubmit(values) {
     const formData = new FormData();
@@ -32,7 +41,10 @@ export default function OrderStatusForm({ order }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
-      <select {...register("status", { required: true })} className="h-10 flex-1 rounded-md border border-zinc-300 bg-white px-2 text-sm capitalize outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100">
+      <select
+        {...register("status", { required: true })}
+        className="h-10 flex-1 rounded-md border border-zinc-300 bg-white px-2 text-sm capitalize outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
+      >
         {statuses.map((status) => (
           <option key={status} value={status}>
             {orderStatusLabel(status)}

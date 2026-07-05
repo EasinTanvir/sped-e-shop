@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatTk } from "@/lib/data";
+import { orderStatusLabel, formatTk } from "@/lib";
 
 export default function ProductCard({ product }) {
   return (
     <article className="grid overflow-hidden rounded-md border border-zinc-200 bg-white shadow-sm">
-      <Link href={`/products/${product.slug}`} className="relative aspect-square bg-zinc-50">
+      <Link
+        href={`/products/${product.slug}`}
+        className="relative aspect-square bg-zinc-50"
+      >
         <Image
           src={product.imageUrl}
           alt={product.name}
@@ -17,7 +20,9 @@ export default function ProductCard({ product }) {
       <div className="grid gap-3 p-4">
         <div>
           <h3 className="text-lg font-black text-zinc-950">{product.name}</h3>
-          <p className="mt-1 line-clamp-2 text-sm text-zinc-600">{product.description}</p>
+          <p className="mt-1 line-clamp-2 text-sm text-zinc-600">
+            {product.description}
+          </p>
         </div>
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -26,7 +31,9 @@ export default function ProductCard({ product }) {
                 {formatTk(product.compareAtPrice)}
               </p>
             ) : null}
-            <p className="text-2xl font-black text-red-600">{formatTk(product.price)}</p>
+            <p className="text-2xl font-black text-red-600">
+              {formatTk(product.price)}
+            </p>
           </div>
           <Link
             href={`/products/${product.slug}`}
