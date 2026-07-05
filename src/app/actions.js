@@ -90,7 +90,7 @@ export async function createOrderAction(formData) {
     data: { phone, address },
   });
 
-  const order = await prisma.order.create({
+  await prisma.order.create({
     data: {
       orderNumber,
       customerName: name,
@@ -106,8 +106,6 @@ export async function createOrderAction(formData) {
       notes,
     },
   });
-
-  await sendOrderStatusEmail(order);
 
   revalidatePath("/");
   revalidatePath("/products");
