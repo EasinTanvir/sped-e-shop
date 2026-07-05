@@ -139,10 +139,10 @@ export async function registerAction(formData) {
   const address = value(formData, "address");
   const password = value(formData, "password");
 
-  if (!name || !email || !password || password.length < 8) {
+  if (!name || !email || !password || password.length < 6) {
     return {
       ok: false,
-      message: "Name, email, and an 8 character password are required.",
+      message: "Name, email, and a 6 character password are required.",
     };
   }
 
