@@ -31,11 +31,18 @@ export function LoginForm({ next = "" }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto grid max-w-md gap-4 rounded-md border border-zinc-200 bg-white p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-auto grid max-w-md gap-4 rounded-md border border-zinc-200 bg-white p-6 shadow-sm"
+    >
       <div>
-        <p className="text-sm font-black uppercase tracking-wide text-red-600">Secure access</p>
+        <p className="text-sm font-black uppercase tracking-wide text-red-600">
+          Secure access
+        </p>
         <h1 className="mt-2 text-3xl font-black">Sign in</h1>
-        <p className="mt-1 text-sm text-zinc-600">Admins go to the dashboard. Customers go to their order panel.</p>
+        <p className="mt-1 text-sm text-zinc-600">
+          Admins go to the dashboard. Customers go to their order panel.
+        </p>
       </div>
       <label className="text-sm font-bold text-zinc-800">
         Email
@@ -44,10 +51,15 @@ export function LoginForm({ next = "" }) {
           type="email"
           {...register("email", {
             required: "Email is required.",
-            pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
+            pattern: {
+              value: /^\S+@\S+\.\S+$/,
+              message: "Enter a valid email address.",
+            },
           })}
         />
-        {errors.email ? <p className={errorClass}>{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p className={errorClass}>{errors.email.message}</p>
+        ) : null}
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Password
@@ -56,10 +68,11 @@ export function LoginForm({ next = "" }) {
           type="password"
           {...register("password", {
             required: "Password is required.",
-            minLength: { value: 8, message: "Password must be at least 8 characters." },
           })}
         />
-        {errors.password ? <p className={errorClass}>{errors.password.message}</p> : null}
+        {errors.password ? (
+          <p className={errorClass}>{errors.password.message}</p>
+        ) : null}
       </label>
       <button
         type="submit"
@@ -69,7 +82,10 @@ export function LoginForm({ next = "" }) {
         {isPending ? "Signing in..." : "Sign in"}
       </button>
       <p className="text-center text-sm text-zinc-600">
-        New customer? <Link href="/register" className="font-black text-red-600">Create account</Link>
+        New customer?{" "}
+        <Link href="/register" className="font-black text-red-600">
+          Create account
+        </Link>
       </p>
     </form>
   );
@@ -96,16 +112,28 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto grid max-w-md gap-4 rounded-md border border-zinc-200 bg-white p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mx-auto grid max-w-md gap-4 rounded-md border border-zinc-200 bg-white p-6 shadow-sm"
+    >
       <div>
-        <p className="text-sm font-black uppercase tracking-wide text-red-600">Customer panel</p>
+        <p className="text-sm font-black uppercase tracking-wide text-red-600">
+          Customer panel
+        </p>
         <h1 className="mt-2 text-3xl font-black">Create account</h1>
-        <p className="mt-1 text-sm text-zinc-600">Use your account to order and track Cash on Delivery purchases.</p>
+        <p className="mt-1 text-sm text-zinc-600">
+          Use your account to order and track Cash on Delivery purchases.
+        </p>
       </div>
       <label className="text-sm font-bold text-zinc-800">
         Name
-        <input className={inputClass} {...register("name", { required: "Name is required." })} />
-        {errors.name ? <p className={errorClass}>{errors.name.message}</p> : null}
+        <input
+          className={inputClass}
+          {...register("name", { required: "Name is required." })}
+        />
+        {errors.name ? (
+          <p className={errorClass}>{errors.name.message}</p>
+        ) : null}
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Email
@@ -114,10 +142,15 @@ export function RegisterForm() {
           type="email"
           {...register("email", {
             required: "Email is required.",
-            pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
+            pattern: {
+              value: /^\S+@\S+\.\S+$/,
+              message: "Enter a valid email address.",
+            },
           })}
         />
-        {errors.email ? <p className={errorClass}>{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p className={errorClass}>{errors.email.message}</p>
+        ) : null}
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Phone
@@ -125,7 +158,10 @@ export function RegisterForm() {
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Address
-        <textarea className="mt-1 min-h-20 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100" {...register("address")} />
+        <textarea
+          className="mt-1 min-h-20 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100"
+          {...register("address")}
+        />
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Password
@@ -134,10 +170,15 @@ export function RegisterForm() {
           type="password"
           {...register("password", {
             required: "Password is required.",
-            minLength: { value: 8, message: "Password must be at least 8 characters." },
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters.",
+            },
           })}
         />
-        {errors.password ? <p className={errorClass}>{errors.password.message}</p> : null}
+        {errors.password ? (
+          <p className={errorClass}>{errors.password.message}</p>
+        ) : null}
       </label>
       <button
         type="submit"
