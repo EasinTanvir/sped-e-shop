@@ -2,8 +2,6 @@ import ProductCard from "@/components/commerce/ProductCard";
 import SiteHeader from "@/components/commerce/SiteHeader";
 import { getProducts } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
-
 export default async function ProductsPage() {
   const products = await getProducts();
 
@@ -12,10 +10,15 @@ export default async function ProductsPage() {
       <SiteHeader />
       <section className="bg-white px-5 py-10">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-black uppercase tracking-wide text-red-600">Product showcase</p>
-          <h1 className="mt-2 text-4xl font-black">Shop pest-control essentials</h1>
+          <p className="text-sm font-black uppercase tracking-wide text-red-600">
+            Product showcase
+          </p>
+          <h1 className="mt-2 text-4xl font-black">
+            Shop pest-control essentials
+          </h1>
           <p className="mt-3 max-w-2xl text-zinc-600">
-            Browse available products. You will be asked to sign in before placing any Cash on Delivery order.
+            Browse available products. You will be asked to sign in before
+            placing any Cash on Delivery order.
           </p>
         </div>
       </section>
