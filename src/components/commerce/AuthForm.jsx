@@ -154,7 +154,20 @@ export function RegisterForm() {
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Phone
-        <input className={inputClass} type="tel" {...register("phone")} />
+        <input
+          className={inputClass}
+          type="tel"
+          {...register("phone", {
+            required: "Phone is required.",
+            pattern: {
+              value: /^[\+]?[0-9]{10,15}$/,
+              message: "Enter a valid phone number.",
+            },
+          })}
+        />
+        {errors.phone ? (
+          <p className={errorClass}>{errors.phone.message}</p>
+        ) : null}
       </label>
       <label className="text-sm font-bold text-zinc-800">
         Address

@@ -53,13 +53,22 @@ export default async function SiteHeader() {
               </button>
             </form>
           ) : (
-            <Link
-              prefetch
-              href="/login"
-              className="rounded-sm bg-[#161F1A] px-3 py-2 uppercase tracking-wide text-[#F5F2E9] hover:bg-[#D6412C]"
-            >
-              Login
-            </Link>
+            <>
+              <Link
+                prefetch
+                href="/login"
+                className="rounded-sm bg-[#161F1A] px-3 py-2 uppercase tracking-wide text-[#F5F2E9] hover:bg-[#D6412C]"
+              >
+                Login
+              </Link>{" "}
+              <Link
+                prefetch
+                href="/register"
+                className="rounded-sm bg-[#D6412C] px-3 py-2 uppercase tracking-wide text-[#F5F2E9] "
+              >
+                Register
+              </Link>
+            </>
           )}
         </div>
       </nav>
