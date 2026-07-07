@@ -13,7 +13,7 @@ export default async function SiteHeader() {
           href="/"
           className="text-lg font-black tracking-normal text-zinc-950"
         >
-          Green Pest Shop
+          ShopnoBD Shop
         </Link>
         <div className="flex items-center gap-2 text-sm font-bold">
           <Link
