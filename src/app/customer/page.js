@@ -59,6 +59,7 @@ export default async function CustomerPage() {
         <div className="flex items-center justify-between border-b border-zinc-200 p-5">
           <h2 className="text-xl font-black">Recent orders</h2>
           <Link
+            prefetch
             href="/customer/orders"
             className="text-sm font-black text-red-600"
           >

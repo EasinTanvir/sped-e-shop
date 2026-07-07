@@ -61,6 +61,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between border-b border-zinc-200 p-5">
           <h2 className="text-xl font-black">Latest orders</h2>
           <Link
+            prefetch
             href="/dashboard/orders"
             className="text-sm font-black text-red-600"
           >

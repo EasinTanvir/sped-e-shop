@@ -89,6 +89,7 @@ const HomePage = async () => {
               </h2>
             </div>
             <Link
+              prefetch
               href="/products"
               className="whitespace-nowrap text-sm font-black uppercase tracking-wide text-[#D6412C] underline decoration-2 underline-offset-4 hover:text-[#b93521]"
             >

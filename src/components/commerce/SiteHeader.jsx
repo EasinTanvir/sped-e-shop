@@ -13,17 +13,10 @@ export default async function SiteHeader() {
           href="/"
           className="flex items-center gap-2 text-lg font-black uppercase tracking-tight text-[#161F1A]"
         >
-          <span className="h-2 w-2 rounded-full bg-[#D6412C]" />
-          ShopnoBD Shop
+          <span className="sm:block hidden h-2 w-2 rounded-full bg-[#D6412C]" />
+          ShopnoBD
         </Link>
         <div className="flex items-center gap-2 text-sm font-bold">
-          <Link
-            prefetch
-            href="/products"
-            className="rounded-sm px-3 py-2 uppercase tracking-wide text-[#161F1A]/70 hover:bg-[#161F1A]/5"
-          >
-            Products
-          </Link>
           {user && (
             <>
               {user?.role === "ADMIN" ? (
