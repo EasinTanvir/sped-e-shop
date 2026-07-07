@@ -17,11 +17,13 @@ const ProductDetailPage = async ({ params }) => {
   if (!product) notFound();
 
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-950">
+    <main className="min-h-screen bg-[#F5F2E9] text-[#161F1A]">
       <SiteHeader />
-      <section className="bg-white px-5 py-10">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative aspect-square overflow-hidden rounded-md bg-zinc-100 shadow-sm">
+      <section className="bg-white px-5 py-12">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative aspect-square overflow-hidden rounded-sm border border-[#161F1A]/10 bg-[#F5F2E9]">
+            <span className="absolute left-0 top-0 z-10 h-4 w-4 border-l-2 border-t-2 border-[#D6412C]" />
+            <span className="absolute bottom-0 right-0 z-10 h-4 w-4 border-b-2 border-r-2 border-[#D6412C]" />
             <Image
               src={product.imageUrl}
               alt={product.name}
@@ -31,26 +33,35 @@ const ProductDetailPage = async ({ params }) => {
             />
           </div>
           <div className="flex flex-col justify-center">
-            <p className="text-sm font-black uppercase tracking-wide text-red-600">
+            <div className="inline-flex w-fit -rotate-2 items-center gap-2 border-2 border-dashed border-[#D6412C] px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#D6412C]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D6412C]" />
               COD available
-            </p>
-            <h1 className="mt-2 text-4xl font-black">{product.name}</h1>
-            <p className="mt-4 text-lg leading-8 text-zinc-600">
+            </div>
+
+            <h1 className="mt-5 text-4xl font-black uppercase tracking-tight text-[#161F1A]">
+              {product.name}
+            </h1>
+
+            <p className="mt-4 text-lg leading-8 text-[#161F1A]/60">
               {product.description}
             </p>
-            <div className="mt-6 flex items-end gap-3">
-              <p className="text-4xl font-black text-red-600">
+
+            <div className="mt-6 flex items-end gap-3 border-b border-dashed border-[#161F1A]/15 pb-6">
+              <p className="text-4xl font-black text-[#D6412C]">
                 {formatTk(product.price)}
               </p>
               {product.compareAtPrice ? (
-                <p className="pb-1 text-lg font-bold text-zinc-400 line-through">
+                <p className="pb-1 font-mono text-lg font-bold text-[#161F1A]/35 line-through">
                   {formatTk(product.compareAtPrice)}
                 </p>
               ) : null}
             </div>
-            <p className="mt-3 text-sm font-bold text-zinc-500">
+
+            <p className="mt-4 flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#161F1A]/50">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#161F1A]/40" />
               Stock: {product.stock} units
             </p>
+
             <div className="mt-7">
               <OrderForm product={product} user={user} />
             </div>

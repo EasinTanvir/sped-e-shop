@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import ToastProvider from "@/components/commerce/ToastProvider";
 import "./globals.css";
+import SiteFooter from "@/components/SiteFooter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-950">
         <ToastProvider />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );

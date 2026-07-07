@@ -3,8 +3,6 @@ import { requireCustomer } from "@/lib/auth";
 import { orderStatusLabel, formatTk } from "@/lib";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-
 export default async function CustomerPage() {
   const user = await requireCustomer();
   const orders = await prisma.order.findMany({

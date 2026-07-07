@@ -4,82 +4,98 @@ import SiteHeader from "@/components/commerce/SiteHeader";
 import { getSessionUser } from "@/lib/auth";
 import { getProducts } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
-
 const HomePage = async () => {
   const [products, user] = await Promise.all([getProducts(), getSessionUser()]);
 
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-950">
+    <main className="min-h-screen bg-[#F5F2E9] text-[#161F1A]">
       <SiteHeader />
 
-      <section className="overflow-hidden bg-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-16">
-          <div className="flex flex-col justify-center">
-            <div className="inline-flex w-fit rounded-full border border-red-100 bg-red-50 px-4 py-2 text-sm font-black text-red-600">
-              Cash on Delivery only
-            </div>
-            <h1 className="mt-5 max-w-3xl text-4xl font-black leading-tight text-zinc-950 sm:text-6xl">
-              A cleaner home starts with products you can trust.
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg font-medium leading-8 text-zinc-600">
-              Shop pest-control essentials, create a customer account, place a
-              COD order, and track every status update from your panel.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/products"
-                className="rounded-md bg-red-600 px-6 py-3 text-base font-black text-white transition hover:bg-red-700"
-              >
-                Shop products
-              </Link>
-              <Link
-                href={user ? "/customer" : "/login"}
-                className="rounded-md border border-zinc-300 bg-white px-6 py-3 text-base font-black text-zinc-950 transition hover:border-zinc-950"
-              >
-                {user ? "My panel" : "Login to order"}
-              </Link>
-            </div>
-            <dl className="mt-8 grid max-w-xl grid-cols-3 gap-3 text-center">
-              {[
-                ["COD", "Only"],
-                ["Account", "Required"],
-                ["Email", "Updates"],
-              ].map(([value, label]) => (
-                <div
-                  key={label}
-                  className="rounded-md border border-zinc-200 bg-zinc-50 p-3"
-                >
-                  <dt className="text-xl font-black text-zinc-950">{value}</dt>
-                  <dd className="text-xs font-bold uppercase text-zinc-500">
-                    {label}
-                  </dd>
+      <section className="overflow-hidden bg-[#161F1A]">
+        <div className="mx-auto max-w-7xl px-5 py-14 lg:py-20">
+          {/* Perimeter frame — the "inspection zone" */}
+          <div className="relative border border-dashed border-[#C9C2AC]/30 px-6 py-10 sm:px-10 sm:py-14">
+            {/* Corner registration ticks */}
+            <span className="absolute -left-px -top-px h-3 w-3 border-l-2 border-t-2 border-[#D6412C]" />
+            <span className="absolute -right-px -top-px h-3 w-3 border-r-2 border-t-2 border-[#D6412C]" />
+            <span className="absolute -bottom-px -left-px h-3 w-3 border-b-2 border-l-2 border-[#D6412C]" />
+            <span className="absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-[#D6412C]" />
+
+            <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="flex flex-col justify-center">
+                <div className="inline-flex w-fit -rotate-2 items-center gap-2 border-2 border-dashed border-[#D6412C] px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#D6412C]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#D6412C]" />
+                  Cash on delivery only
                 </div>
-              ))}
-            </dl>
+
+                <h1 className="mt-6 max-w-3xl text-4xl font-black uppercase leading-[1.05] tracking-tight text-[#F5F2E9] sm:text-6xl">
+                  A cleaner home starts with products you can trust.
+                </h1>
+
+                <p className="mt-5 max-w-2xl text-lg font-medium leading-8 text-[#C9C2AC]">
+                  Shop pest-control essentials, create a customer account, place
+                  a COD order, and track every status update from your panel.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link
+                    href="/products"
+                    className="rounded-sm bg-[#D6412C] px-6 py-3 text-base font-black uppercase tracking-wide text-[#F5F2E9] transition hover:bg-[#b93521]"
+                  >
+                    Shop products
+                  </Link>
+                  <Link
+                    href={user ? "/customer" : "/login"}
+                    className="rounded-sm border border-[#C9C2AC]/40 px-6 py-3 text-base font-black uppercase tracking-wide text-[#F5F2E9] transition hover:border-[#F5F2E9]"
+                  >
+                    {user ? "My panel" : "Login to order"}
+                  </Link>
+                </div>
+
+                {/* Specimen tags */}
+                <dl className="mt-10 grid max-w-xl grid-cols-3 gap-4 text-left">
+                  {[
+                    ["COD", "Only"],
+                    ["Account", "Required"],
+                    ["Email", "Updates"],
+                  ].map(([value, label]) => (
+                    <div key={label} className="relative pl-3">
+                      <span className="absolute left-0 top-1.5 h-1.5 w-1.5 rounded-full bg-[#D6412C]" />
+                      <dt className="text-xl font-black text-[#F5F2E9]">
+                        {value}
+                      </dt>
+                      <dd className="font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-[#C9C2AC]">
+                        {label}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="px-5 py-12">
+      <section className="px-5 py-14">
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-4 border-b border-[#161F1A]/10 pb-5">
             <div>
-              <p className="text-sm font-black uppercase tracking-wide text-red-600">
+              <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#D6412C]">
+                <span className="h-px w-8 bg-[#D6412C]" />
                 Featured products
               </p>
-              <h2 className="mt-2 text-3xl font-black">
+              <h2 className="mt-3 text-3xl font-black uppercase tracking-tight text-[#161F1A]">
                 Ready for home delivery
               </h2>
             </div>
             <Link
               href="/products"
-              className="text-sm font-black text-red-600 hover:text-red-700"
+              className="whitespace-nowrap text-sm font-black uppercase tracking-wide text-[#D6412C] underline decoration-2 underline-offset-4 hover:text-[#b93521]"
             >
-              View all
+              View all →
             </Link>
           </div>
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
             {products.slice(0, 3).map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
