@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Green Pest Shop",
+  title: "Shopnobd Shop",
   description: "Cash on Delivery pest control product store",
 };
 
