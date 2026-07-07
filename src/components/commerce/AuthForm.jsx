@@ -83,7 +83,7 @@ export function LoginForm({ next = "" }) {
       </button>
       <p className="text-center text-sm text-zinc-600">
         New customer?{" "}
-        <Link href="/register" className="font-black text-red-600">
+        <Link prefetch href="/register" className="font-black text-red-600">
           Create account
         </Link>
       </p>
